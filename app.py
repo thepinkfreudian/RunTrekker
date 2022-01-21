@@ -32,7 +32,11 @@ table_styles = dict(style_header={'backgroundColor': '#171717',
 
     
 CSS = ['/assets/custom.css']
-app = dash.Dash(__name__, external_stylesheets=CSS)
+app = dash.Dash(__name__,
+                external_stylesheets=CSS,
+                meta_tags=[
+        {"name": "viewport", "content": "width=device-width, initial-scale=1"}
+    ])
 server = app.server
 
 
