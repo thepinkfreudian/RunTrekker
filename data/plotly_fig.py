@@ -216,7 +216,7 @@ coordinates_run_config = dict(name='coordinates run',
 
 colorsIdx = {'state border': '#3396EA', 'minor city': '#FFFFFF', 'historical site': '#2D2D30', 'route milestone': '#FFFFFF'}
 sizesIdx = {'state border': 10, 'minor city': 8, 'historical site': 8, 'route milestone': 14}
-cols = poi_df['poi_type'].map(colorsIdx)
+colors = poi_df['poi_type'].map(colorsIdx)
 sizes = poi_df['poi_type'].map(sizesIdx)
 poi_config = dict(name='points of interest',
                   lat=poi_df['latitude'],
@@ -226,7 +226,7 @@ poi_config = dict(name='points of interest',
                   textfont=dict(color=site_css['colors']['white'], size=12),
                   textposition='top right',
                   #marker_size=12,
-                  marker=dict(size=sizes, color=cols),
+                  marker=dict(size=sizes, color=colors),
                   #marker_color=site_css['colors']['white']
                   )
 
