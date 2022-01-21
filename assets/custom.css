@@ -61,6 +61,10 @@ body {
 	display: inline-block;
 }
 
+.col-element {
+	margin-bottom: 4%;
+}
+
 #email-link {
 	margin-left: 5px;
 }

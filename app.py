@@ -35,7 +35,10 @@ CSS = ['/assets/custom.css']
 app = dash.Dash(__name__,
                 external_stylesheets=CSS,
                 meta_tags=[
-        {"name": "viewport", "content": "width=device-width, initial-scale=1"}
+        {'name': 'viewport', 'content': 'width=device-width, initial-scale=1'},
+        {'name': 'og:title', 'content': 'RunTrekker'},
+        {'name': 'og:description', 'content': 'A route tracking app for runners.'},
+        {'name': 'og:img', 'content': 'https://thepinkfreudian.com/site_thumbnail.png'}
     ])
 server = app.server
 
@@ -90,7 +93,7 @@ app.layout = html.Div(children=[
                     dcc.Graph(id='progress-rate',
                               figure=figs.bullets)
                     ])
-                ]),
+                ], className='col-element'),
 
             html.Div(children=[
                 html.H3("Route Milestones Reached"),
@@ -103,7 +106,7 @@ app.layout = html.Div(children=[
                     style_cell=table_styles['style_cell'],
                     style_data=table_styles['style_data']
                     )
-                ])
+                ], className='col-element')
             
             ], className='dash-container two-col'),
 
