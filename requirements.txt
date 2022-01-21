@@ -3,5 +3,10 @@ plotly
 MySQL
 dash
 google-api-python-client
+google.auth.transport
+google.oauth2
+google_auth_oauthlib
+googleapiclient
+googleapiclient
 gunicorn
 chart-studio
