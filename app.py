@@ -49,7 +49,8 @@ app.layout = html.Div(children=[
         html.H1(children='RunTrekker', className='title'),
         html.H3(children=tagline),
         dcc.Graph(id='main-bullet',
-            figure=figs.main_bullet),
+            figure=figs.main_bullet,
+                  config={'displayModeBar': False}),
         html.Div(children=annotation),
         html.Div(children='Latest Milestone: ' + str(last_poi_reached['Route Milestone']) + ' (' + str(last_poi_reached['Date Reached']) + ')'),
         html.Div(id='links', children=[
@@ -87,8 +88,7 @@ app.layout = html.Div(children=[
                 html.H3(children='Progress Towards Mileage Goals'),
                 html.Div(id='bullet-wrapper', children=[
                     dcc.Graph(id='progress-rate',
-                              figure=figs.bullets,
-                              config={'displayModeBar': False})
+                              figure=figs.bullets)
                     ])
                 ]),
 
