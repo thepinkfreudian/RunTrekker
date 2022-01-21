@@ -1,0 +1,6 @@
+pandas
+plotly
+MySQL
+dash
+google-api-python-client
+gunicorn
