@@ -38,7 +38,7 @@ app = dash.Dash(__name__,
         {'name': 'viewport', 'content': 'width=device-width, initial-scale=1'},
         {'name': 'og:title', 'content': 'RunTrekker'},
         {'name': 'og:description', 'content': 'A route tracking app for runners.'},
-        {'name': 'og:img', 'content': 'https://thepinkfreudian.com/site_thumbnail.png'}
+        {'name': 'og:image', 'content': 'https://thepinkfreudian.com/site_thumbnail.png'}
     ])
 server = app.server
 
