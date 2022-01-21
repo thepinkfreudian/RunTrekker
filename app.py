@@ -9,6 +9,7 @@ from setup import config
 
 run_df = figs.run_df[['run_date', 'miles']]
 run_df.columns = ['Date', 'Miles']
+run_df['Miles'] = run_df['Miles'].apply(lambda x: round(x, 2))
     
 # div/page attributes
 tagline = config['map']['start_point'] + ' to ' + config['map']['end_point']

@@ -203,7 +203,7 @@ base_layout = dict(font=base_font,
                    showlegend=False,
                    mapbox=dict(zoom=5.25,
                                center=dict(lat=center_lat,
-                                          lon=-70.0000#center_lon
+                                          lon=-72.0000#center_lon
                                            )
                                ),
                    )
@@ -230,18 +230,6 @@ poi_config = dict(name='points of interest',
                   #marker_color=site_css['colors']['white']
                   )
 
-annotation_layout = dict(font=annotation_font,
-                         bgcolor=site_css['colors']['darkgrey'],
-                         x=0.05,
-                         y=.9,
-                         showarrow=False,
-                         text='Total miles completed: ' + str(total_miles_run) + ' of 711',
-                         textangle=0,
-                         xanchor='left',
-                         xref='paper',
-                         yref='paper'
-                         )
-
 
 # generate base tile map zoomed to route and set layout properties
 map_fig = px.scatter_mapbox(**base_map_config)
@@ -262,7 +250,7 @@ bullets.add_trace(weekly_bullet)
 bullets.add_trace(monthly_bullet)
 bullets.add_trace(yearly_bullet)
 
-bullets.update_layout(height = 200, margin = {'t': 0, 'b': 0, 'l': 75}, paper_bgcolor = '#171717')
+bullets.update_layout(height = 150, margin = {'t': 0, 'b': 0, 'l': 25}, paper_bgcolor = '#171717')
 
 main_bullet = go.Figure()
 fig = go.Indicator(
