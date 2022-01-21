@@ -11,7 +11,7 @@ import datetime
 import plotly.express as px
 import plotly.graph_objs as go
 import chart_studio.plotly as py
-from runtrackerv2.api_data import api_data
+from data.api_data import api_data
 import utils.database as db
 import utils.utils as utils
 from setup import config, environment, push
