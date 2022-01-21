@@ -8,7 +8,7 @@ import utils.utils as utils
 
 # testing
 start_date = '2022-01-01'
-end_date = '2022-01-20'
+end_date = datetime.strftime(datetime.today(), '%Y-%m-%d')
 environment = 'dev'
 
 

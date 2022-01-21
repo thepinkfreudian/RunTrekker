@@ -63,7 +63,8 @@ app.layout = html.Div(children=[
             dcc.Graph(
                 id='map-fig',
                 style={'height': '100%'},
-                figure=figs.map_fig
+                figure=figs.map_fig,
+                config={'responsive': True},
                 )
             ], style = {#'display': 'inline-block',
                 'width': '100vw', 'height': '100vh', 'overflow': 'hidden', 'z-index': '-1', 'position': 'absolute'})

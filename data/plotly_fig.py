@@ -7,7 +7,7 @@ sys.path.append(parentdir)
 
 import pandas as pd
 import MySQLdb as sql
-import datetime
+from datetime import datetime
 import plotly.express as px
 import plotly.graph_objs as go
 import chart_studio.plotly as py
@@ -111,7 +111,7 @@ connection_config = config['mySQL']['connection_config']
 insert_table = config['mySQL']['insert_tables'][environment]
 data_tables = config['mySQL']['data_tables']
 
-today = '2022-01-20'#datetime.datetime.today()
+today = datetime.strftime(datetime.today(), '%Y-%m-%d')
 current_week_start, current_week_end = utils.get_weekdate_range(today)
 current_month_name = utils.get_month_name(today)
 current_year = utils.get_year(today)
@@ -155,11 +155,12 @@ goal_calendar = get_goal_calendar(run_df, goals['daily'])
 
 # actual vs expected / on track
 actual_weekly = goal_calendar[goal_calendar['week_start'] == current_week_start]['actual_miles'].sum()
-weekly_on_track = actual_weekly * 7 >= goals['weekly']
+days_passed_in_week = len(goal_calendar[(goal_calendar['actual_miles'] != 0.00) & (goal_calendar['week_start'] == current_week_start)])
+weekly_on_track = actual_weekly >= days_passed_in_week * goals['daily']
 
 actual_monthly = float(goal_calendar[goal_calendar['month_name'] == current_month_name]['actual_miles'].sum())
 days_in_month = len(goal_calendar[goal_calendar['month_name'] == current_month_name])
-days_passed_in_month = len(goal_calendar[(goal_calendar['actual_miles'] == 0.00) & (goal_calendar['month_name'] == current_month_name)])
+days_passed_in_month = len(goal_calendar[(goal_calendar['actual_miles'] != 0.00) & (goal_calendar['month_name'] == current_month_name)])
 expected_monthly = goals['daily'] * days_in_month
 monthly_on_track = actual_monthly >= days_passed_in_month * goals['daily']
 
@@ -202,9 +203,9 @@ base_layout = dict(font=base_font,
                    #mapbox_style=mapbox_style,
                    showlegend=False,
                    mapbox=dict(zoom=5.25,
-                               center=dict(lat=center_lat,
-                                          lon=-72.0000#center_lon
-                                           )
+                               #center=dict(lat=center_lat,
+                                #          lon=-72.0000#center_lon
+                                 #          )
                                ),
                    )
 
