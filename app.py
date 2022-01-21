@@ -3,8 +3,8 @@ from dash import dcc
 from dash import html
 from dash import dash_table
 
-import runtrackerv2.plotly_fig as figs
-from runtrackerv2.api_data import api_data
+import runtrekker.plotly_fig as figs
+from runtrekker.api_data import api_data
 from setup import config
 
 run_df = figs.run_df[['run_date', 'miles']]
