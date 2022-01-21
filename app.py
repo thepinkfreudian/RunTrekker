@@ -55,7 +55,7 @@ app.layout = html.Div(children=[
         html.Div(id='links', children=[
             dcc.Link('about', href='about.html', className='inline-link'),
             html.Span('  -  ', style={'display': 'inline-block'}),
-            html.A('source code', href='https://www.github.com/thepinkfreudian/runtracker', target="_blank", className='inline-link')
+            html.A('source code', href='https://www.github.com/thepinkfreudian/runtrekker', target="_blank", className='inline-link')
             ])
         ], className='over'),
     
@@ -85,8 +85,11 @@ app.layout = html.Div(children=[
 
             html.Div(children=[
                 html.H3(children='Progress Towards Mileage Goals'),
-                dcc.Graph(id='progress-rate',
-                          figure=figs.bullets)
+                html.Div(id='bullet-wrapper', children=[
+                    dcc.Graph(id='progress-rate',
+                              figure=figs.bullets,
+                              config={'displayModeBar': False})
+                    ])
                 ]),
 
             html.Div(children=[
@@ -120,7 +123,14 @@ app.layout = html.Div(children=[
                 )
             ], className='dash-container two-col')
             
-        ], style={'width': '100vw'}, className='row')
+        ], style={'width': '100%'}, className='row'),
+
+    html.Div(id='footer', children=[
+        html.Div('created by ', className='footer-text'),
+        html.A(id='email-link', children=['thepinkfreudian'], href='mailto:pink@thepinkfreudian.com', target='_blank', className='footer-text'),
+        html.Div(', 2022.', className='footer-text')
+        ], className='row footer')
+    
 ], className='container')
 
 if __name__ == '__main__':

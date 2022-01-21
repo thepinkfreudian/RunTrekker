@@ -251,7 +251,7 @@ bullets.add_trace(weekly_bullet)
 bullets.add_trace(monthly_bullet)
 bullets.add_trace(yearly_bullet)
 
-bullets.update_layout(height = 150, margin = {'t': 0, 'b': 0, 'l': 25}, paper_bgcolor = '#171717')
+bullets.update_layout(height = 150, margin = {'t': 0, 'b': 0, 'l': 100}, paper_bgcolor = '#171717')
 
 main_bullet = go.Figure()
 fig = go.Indicator(
@@ -265,7 +265,7 @@ fig = go.Indicator(
            },
     #delta={'reference': expected_miles},
     value=(total_miles_run / goals['yearly']) * 100,
-    number={'suffix': '%', 'font': {'color': '#E12194'}}#,
+    number={'suffix': '%', 'font': {'color': '#E12194'}}
     #domain=[]
     #title={'text': time_range, 'align': 'left', 'font': {'size': 14, 'color': '#ACB7B5'}}
     )

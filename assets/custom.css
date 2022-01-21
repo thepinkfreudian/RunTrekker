@@ -36,8 +36,6 @@ body {
 	font-family: 'Secular One';
 	font-style: bold;
 	font-weight: 400;
-	font-size: 4em;
-	letter-spacing: .15em;
 	background-color: transparent;
 	margin-bottom: 0;
 }
@@ -45,6 +43,27 @@ body {
 .inline-link {
 	display: 'inline-block';
 	padding: 0 1%;
+}
+
+.footer {
+	width: 100%;
+	text-align: center;
+	bottom: 0;
+	margin-top: 5%;
+}
+
+.footer-text {
+	display: inline-block;
+}
+
+#email-link {
+	margin-left: 5px;
+}
+
+
+#bullet-wrapper {
+	margin: 0;
+	max-height: 150px;
 }
 
 @media(min-width:400px) and (max-width:768px) {
@@ -55,6 +74,11 @@ body {
 		position: relative;
 		overflow-x: hidden;
     }
+
+	.title {
+		font-size: 3em;
+		letter-spacing: .25em;
+	}
 
 	.over {
 		margin: 0;
@@ -74,8 +98,8 @@ body {
 	}
 
 	.two-col {
-		width: 90%;
-		margin: 1% 2.5%; 
+		width: 95%;
+		margin: 1% 1.5%; 
 	}
 
 	#left-col-row2 {
@@ -92,17 +116,23 @@ body {
 @media(min-width:769px) {
 	.container {
 		width: 100vw;
+		height: 100%;
 		max-width: 1500px;
-		overflow: hidden;
+		overflow-x: hidden;
 		position: relative;
 		margin: 0 auto;
 	}
 
+	.title {
+		font-size: 4em;
+		letter-spacing: .15em;
+	}
+
 	#map-fig {
 		display: inline-block;
-		width: 95vw; 
+		width: 100vw; 
 		height: 100vh; 
-		/*overflow: hidden;*/
+		overflow: hidden;
 		z-index: -1; 
 		position: absolute;
 	}
@@ -113,13 +143,15 @@ body {
 		margin: 0;
 	}
 
-	.row { margin-bottom: 2rem; }
+	.row { 
+		margin-bottom: 2rem; 
+	}
 
 	.over {
 		z-index: 1; 
 		background-color: transparent; 
 		float: right; 
-		margin: 20% 5% 0 auto;
+		margin: 20% 3% 0 auto;
 		text-align: center;
 	}
 
@@ -146,4 +178,11 @@ body {
 	#run-data-table {
 		width: 95%;
 	}
+
+	.footer {
+		position: absolute;
+		bottom: 0;
+		height: 2px;
+	}
+
 }
