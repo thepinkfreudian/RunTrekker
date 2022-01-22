@@ -30,7 +30,7 @@ table_styles = dict(style_header={'backgroundColor': '#171717',
                     style_data={'width': 'auto'})
 
 
-    
+
 CSS = ['/assets/custom.css']
 app = dash.Dash(__name__,
                 external_stylesheets=CSS,
@@ -57,7 +57,7 @@ app.layout = html.Div(children=[
         html.Div(children=annotation),
         html.Div(children='Latest Milestone: ' + str(last_poi_reached['Route Milestone']) + ' (' + str(last_poi_reached['Date Reached']) + ')'),
         html.Div(id='links', children=[
-            dcc.Link('about', href='about.html', className='inline-link'),
+            dcc.Link('about', href='https://www.thepinkfreudian.com/about.html', className='inline-link'),
             html.Span('  -  ', style={'display': 'inline-block'}),
             html.A('source code', href='https://www.github.com/thepinkfreudian/runtrekker', target="_blank", className='inline-link')
             ])
