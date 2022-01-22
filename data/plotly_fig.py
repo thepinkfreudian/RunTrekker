@@ -134,7 +134,7 @@ poi_df = db.get_data(conn, data_tables['poi_data'])
 
 # add start and end locations to poi labels
 poi_df.loc[poi_df['label'] == 'START - ', 'label'] = 'START - ' + str(start_point)
-poi_df.loc[poi_df['label'] == 'END - ', 'label'] = 'START - ' + str(end_point)
+poi_df.loc[poi_df['label'] == 'END - ', 'label'] = 'END - ' + str(end_point)
 
 # get midpoint data
 poi_id = len(poi_df)
