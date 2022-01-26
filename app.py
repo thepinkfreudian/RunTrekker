@@ -51,14 +51,17 @@ app.layout = html.Div(children=[
     html.Div(children=[
         html.H1(children='RunTrekker', className='title'),
         html.H3(children=tagline),
+        html.Span('A Python Dash app to track running mileage progress', style={'font-size': '.8em'}),
+        html.Br(),
+        html.Span('on a chosen route between cities.', style={'font-size': '.8em', 'padding-top': '2%'}),
         dcc.Graph(id='main-bullet',
             figure=figs.main_bullet,
                   config={'displayModeBar': False}),
         html.Div(children=annotation),
         html.Div(children='Latest Milestone: ' + str(last_poi_reached['Route Milestone']) + ' (' + str(last_poi_reached['Date Reached']) + ')'),
         html.Div(id='links', children=[
-            html.A('about', href='/about.html', className='inline-link'),
-            html.Span('  -  ', style={'display': 'inline-block'}),
+           # html.A('about', href='http://www.thepinkfreudian.com/about.html', target="_blank", className='inline-link'),
+           # html.Span('  -  ', style={'display': 'inline-block'}),
             html.A('source code', href='https://www.github.com/thepinkfreudian/runtrekker', target="_blank", className='inline-link')
             ])
         ], className='over'),
