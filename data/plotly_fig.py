@@ -144,10 +144,10 @@ poi_df.loc[len(poi_df)] = midpoint_row
 
 # calculate miles run and generate data frame of only reached coordinates
 total_miles_run = round(sum(run_df['miles']), 2)
-coordinates_run = route_df[route_df['cumulative_distance_mi'] <= total_miles_run]
+coordinates_run = route_df[route_df['distance_from_start_mi'] <= total_miles_run]
 
 # define weekly, monthly, yearly mileage goals based on total route distance
-route_distance = round(route_df['distance_from_start_mi'].sum(), 2)
+route_distance = round(route_df.loc[len(route_df)-1]['distance_from_start_mi'], 2)
 goals = get_goals(route_distance)
 
 # get derived dfs
@@ -175,7 +175,7 @@ master_df['date_reached'] = pd.Series('object')
 
 for index, row in master_df.iterrows():
     if pd.notnull(row['label']):
-        miles = row['cumulative_distance_mi']
+        miles = row['distance_from_start_mi']
         reached = api_data[api_data['total_miles'] >= miles]
         master_df['date_reached'][index] = reached.iloc[0, 0]
 
@@ -215,8 +215,8 @@ coordinates_run_config = dict(name='coordinates run',
                               marker=dict(size=6, color=site_css['colors']['pink'])
                           )
 
-colorsIdx = {'state border': '#3396EA', 'minor city': '#FFFFFF', 'historical site': '#2D2D30', 'route milestone': '#FFFFFF'}
-sizesIdx = {'state border': 10, 'minor city': 8, 'historical site': 8, 'route milestone': 14}
+colorsIdx = {'state border': '#3396EA', 'city': 'cyan', 'route milestone': '#FFFFFF'}
+sizesIdx = {'state border': 10, 'city': 8, 'route milestone': 14}
 colors = poi_df['poi_type'].map(colorsIdx)
 sizes = poi_df['poi_type'].map(sizesIdx)
 poi_config = dict(name='points of interest',
@@ -224,6 +224,7 @@ poi_config = dict(name='points of interest',
                   lon=poi_df['longitude'],
                   mode='markers+text',
                   text=poi_df['label'],
+                  hoverinfo='text',
                   textfont=dict(color=site_css['colors']['white'], size=12),
                   textposition='top right',
                   #marker_size=12,
