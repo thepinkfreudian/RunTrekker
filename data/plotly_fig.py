@@ -82,6 +82,8 @@ def make_bullets(actual_miles, expected_miles, on_track, time_range):
     elif time_range == 'Yearly':
         domain={'x': [0.1, 1], 'y': [0.1, 0.3]}
 
+    
+
     fig = go.Indicator(
         mode="number+gauge",
         gauge={'shape': "bullet",
@@ -183,7 +185,10 @@ for index, row in master_df.iterrows():
 # define custom dataframes for display
 poi_reached = master_df[master_df['date_reached'].notna()][['label', 'date_reached']]
 poi_reached.columns = ['Route Milestone', 'Date Reached']
-
+last_poi = poi_reached.iloc[len(poi_reached)-1]['Route Milestone']
+last_poi_index = poi_df.index[poi_df['label'] == last_poi]
+next_poi_row = poi_df.loc[last_poi_index+1]
+next_poi_df = route_df.merge(next_poi_row, how='inner', on=['latitude', 'longitude'])
 
 # define layout css
 base_font = dict(size=16, family=site_css['fonts']['headings'], color='#3396EA')
@@ -266,8 +271,8 @@ fig = go.Indicator(
            },
     #delta={'reference': expected_miles},
     value=(total_miles_run / goals['yearly']) * 100,
-    number={'suffix': '%', 'font': {'color': '#E12194'}}
-    #domain=[]
+    number={'suffix': '%', 'font': {'color': '#E12194'}, 'valueformat': '.0f'},
+    domain={'x': [.1, 1], 'y': [0, 1]}
     #title={'text': time_range, 'align': 'left', 'font': {'size': 14, 'color': '#ACB7B5'}}
     )
 main_bullet.add_trace(fig)
