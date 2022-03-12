@@ -1,1 +1,1 @@
-web: gunicorn app:server --max-requests 1200
+web: gunicorn runtrekker:app
