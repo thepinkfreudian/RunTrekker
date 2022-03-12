@@ -1,1 +1,1 @@
-web: gunicorn runtrekker:app
+web: gunicorn app:server
