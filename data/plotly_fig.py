@@ -84,6 +84,8 @@ def make_bullets(actual_miles, expected_miles, on_track, time_range):
 
     
 
+    
+
     fig = go.Indicator(
         mode="number+gauge",
         gauge={'shape': "bullet",
