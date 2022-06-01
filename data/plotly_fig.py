@@ -129,7 +129,9 @@ conn = sql.connect(connection_config['hostname'],
 cursor = conn.cursor()
 
 # update database with Google fit data
-db.update_database(conn, api_data, insert_table)
+# db.update_database(conn, api_data, insert_table)
+api_data = pd.read_sql('SELECT * FROM run_data_new', conn)
+api_data.columns = ['ID', 'Date', 'Miles']
 
 # bring mySQL data into DataFrames
 route_df = db.get_data(conn, data_tables['map_data'])
