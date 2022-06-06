@@ -1,5 +1,20 @@
 import pandas as pd
-from utils.utils import select_all
+from datetime import timedelta
+
+
+def select_all(cursor, table):
+    cols_query = 'SHOW COLUMNS FROM ' + table
+    data_query = 'SELECT * FROM ' + table
+
+    cursor.execute(cols_query)
+    cols = cursor.fetchall()
+    columns = [col[0] for col in cols]
+
+    cursor.execute(data_query)
+    data = cursor.fetchall()
+
+    return columns, data
+
 
 def get_data(conn, table):
 
@@ -31,19 +46,19 @@ def insert_record(conn, table, date, miles):
 
     local_cursor = conn.cursor()
 
-    insert_query = "INSERT INTO " + table + " (run_date, miles) VALUES ('" + date + "', " + str(miles) + ")"
+    insert_query = "INSERT INTO " + table + " (run_date, miles) VALUES ('" + str(date) + "', " + str(miles) + ")"
     local_cursor.execute(insert_query)
     conn.commit()
 
     local_cursor.close()
 
 
-def update_record(conn, table, ID, date, miles):
+def update_record(conn, table, date, miles):
 
     local_cursor = conn.cursor()
 
-    # update_query = "UPDATE " + table + " SET miles = " + str(miles) + " WHERE run_date = '" + date + "'"
-    update_query = "UPDATE " + table + " SET miles = " + str(miles) + " WHERE runDataID = " + str(ID)
+    update_query = "UPDATE " + table + " SET miles = " + str(miles) + " WHERE run_date = '" + str(date) + "'"
+    # update_query = "UPDATE " + table + " SET miles = " + str(miles) + " WHERE runDataID = " + str(ID)
 
     local_cursor.execute(update_query)
     conn.commit()
@@ -51,15 +66,19 @@ def update_record(conn, table, ID, date, miles):
     local_cursor.close()
 
 
-def update_database(conn, data, insert_table):
+def update_database(conn, updates, inserts, insert_table):
 
     local_cursor = conn.cursor()
 
     keys = get_key_list(local_cursor, insert_table)
 
-    for index, row in data.iterrows():
+    for index, row in updates.iterrows():
 
-        update_record(conn, insert_table, row['ID'], row['Date'], row['Miles'])
+        update_record(conn, insert_table, row['Date'], row['Miles'])
+
+    for index, row in inserts.iterrows():
+
+        insert_record(conn, insert_table, row['Date'], row['Miles'])
         
 ##        method = get_method(row, keys)
 ##

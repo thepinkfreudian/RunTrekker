@@ -30,6 +30,23 @@ def get_session_config(config_file):
     return config
 
 
+def get_setup_dates(conn, table):
+
+    local_cursor = conn.cursor()
+
+    query = "SELECT MAX(STR_TO_DATE(IFNULL(run_date, '2022-01-01'), '%Y-%m-%d')) FROM " + table
+    local_cursor.execute(query)
+    row = local_cursor.fetchone()
+
+    cutoff_date = row[0]
+    start_date = cutoff_date - timedelta(days=7)
+    end_date = datetime.today().date()
+
+    local_cursor.close()
+
+    return cutoff_date, start_date, end_date
+
+
 def get_weekdate_range(date, date_format='%Y-%m-%d'):
 
     if not isinstance(date, datetime):
@@ -62,16 +79,3 @@ def get_year(date, date_format='%Y-%m-%d'):
     year = date.year
 
     return year
-
-def select_all(cursor, table):
-    cols_query = 'SHOW COLUMNS FROM ' + table
-    data_query = 'SELECT * FROM ' + table
-
-    cursor.execute(cols_query)
-    cols = cursor.fetchall()
-    columns = [col[0] for col in cols]
-
-    cursor.execute(data_query)
-    data = cursor.fetchall()
-
-    return columns, data
