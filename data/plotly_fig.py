@@ -6,7 +6,7 @@ parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
 import pandas as pd
-import MySQLdb as sql
+# from mysql.connector import connect
 from datetime import datetime
 import plotly.express as px
 import plotly.graph_objs as go
@@ -14,8 +14,8 @@ import chart_studio.plotly as py
 from data.api_data import api_data
 import utils.database as db
 import utils.utils as utils
-from setup import config, environment, push
-
+from setup import config, environment, start_date, end_date, cutoff_date, conn
+from datetime import timedelta
 
 # function definitions
 def get_goal_calendar(run_df, daily_goal):
@@ -111,7 +111,7 @@ site_css = config['map']['site_css']
 start_point = config['map']['start_point']
 end_point = config['map']['end_point']
 
-connection_config = config['mySQL']['connection_config']
+# connection_config = config['mySQL']['connection_config']
 insert_table = config['mySQL']['insert_tables'][environment]
 data_tables = config['mySQL']['data_tables']
 
@@ -120,18 +120,20 @@ current_week_start, current_week_end = utils.get_weekdate_range(today)
 current_month_name = utils.get_month_name(today)
 current_year = utils.get_year(today)
 
-# connect to mySQL instance
-conn = sql.connect(connection_config['hostname'],
-                   connection_config['username'],
-                   connection_config['password'],
-                   connection_config['db'])
 
-cursor = conn.cursor()
+##conn = connect(host=connection_config['hostname'],
+##                                database=connection_config['db'],
+##                                user=connection_config['username'],
+##                                password=connection_config['password'])
+
+##cursor = conn.cursor()
+
 
 # update database with Google fit data
-# db.update_database(conn, api_data, insert_table)
-api_data = pd.read_sql('SELECT run_date, miles FROM run_data_new', conn)
-api_data.columns = ['Date', 'Miles']
+updates = api_data[api_data['Date'] <= cutoff_date]
+inserts = api_data[api_data['Date'] > cutoff_date]
+db.update_database(conn, updates, inserts, insert_table)
+
 
 # bring mySQL data into DataFrames
 route_df = db.get_data(conn, data_tables['map_data'])

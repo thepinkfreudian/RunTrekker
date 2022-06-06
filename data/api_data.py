@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 from setup import config, start_date, end_date
 
 from google.auth.transport.requests import Request
@@ -8,6 +8,13 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+
+# testing
+##secrets = "../cfg/google_api_secrets.json"
+##token_file = "../cfg/token.json"
+##start_date = '2022-01-01'
+##end_date = datetime.strftime(datetime.today(), '%Y-%m-%d')
+
 
 secrets = config['google_fit_api']['secrets_file']
 token_file = config['google_fit_api']['token_file']
@@ -18,7 +25,8 @@ dataset = ''  # set after function defs
 
 # Google API 'dataset' requires time range expressed in nanoseconds
 def date_to_nanoseconds(date):
-    dt = datetime.strptime(date + ' 00:00:00,76', '%Y-%m-%d %H:%M:%S,%f')
+    #dt = datetime.strptime(date + ' 00:00:00,76', '%Y-%m-%d %H:%M:%S,%f')
+    dt = datetime.combine(date, datetime.min.time())
     nano_dt = dt.timestamp() * 1000000000
 
     return int(nano_dt)
@@ -28,6 +36,7 @@ def nanoseconds_to_date(ns):
     dt = datetime.fromtimestamp(ns // 1000000000)
 
     return dt.strftime('%Y-%m-%d')
+
 
 # largely taken from Google's Python API docs
 def get_credentials(token_file, secrets, scopes):
@@ -64,8 +73,7 @@ def get_api_data(credentials, dataset, datasource):
 
     return response
 
-
-start_date_ns = date_to_nanoseconds(start_date)
+start_date_ns = date_to_nanoseconds(datetime(2022, 1, 1))
 end_date_ns = date_to_nanoseconds(end_date)
 dataset = str(start_date_ns) + '-' + str(end_date_ns)
 
@@ -86,9 +94,5 @@ for i in range(0, len(points)):
 
 # each date can have several entries over the course of the day; sum to get one entry per day (consistent with database)
 api_data = data.groupby(['Date'], as_index=False)['Miles'].sum()
-api_data['ID'] = pd.Series('int')
 
-ID = 1
-for i in range(0, len(api_data)):
-    api_data['ID'][i] = ID
-    ID += 1
+api_data['Date'] = pd.to_datetime(api_data['Date']).dt.date

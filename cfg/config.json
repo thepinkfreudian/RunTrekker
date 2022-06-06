@@ -1,0 +1,39 @@
+{
+	"map": {
+		"mapbox_api_key": "MAPBOX_API_KEY",
+		"mapbox_style": "MAPBOX_STYLE_URL",
+		"dashboard_name": "DASHBOARD_NAME",
+		"start_point": "START_CITY",
+		"end_point": "END_CITY",
+		"site_css": {
+			"colors": {
+				"COLOR" : "HEX_CODE"
+				},
+			"fonts": {
+				"heading" : "FONT_FAMILY",
+				"paragraph": "FONT_FAMILY"
+				}
+		}
+	},
+	"mySQL": {
+		"sql_config": {
+			"hostname": "DATABASE_HOSTNAME",
+			"db": "DATABASE_NAME",
+			"username": "DATABASE_USERNAME",
+			"password": "DATABASE_PASSWORD"
+		},
+		"insert_tables": {
+			"dev": "DEV_TABLE",
+			"prod": "PROD_TABLE"
+		},
+		"data_tables": {
+			"map_data": "MAP_DATA_TABLE",
+			"run_data": "RUN_DATA_TABLE",
+			"poi_data": "POI_DATA_TABLE"
+		}
+	},
+	"google_fit_api": {
+		"secrets": "../cfg/SECRETS_FILE",
+		"token_file": "../cfg/TOKEN_FILE"
+	}
+}
