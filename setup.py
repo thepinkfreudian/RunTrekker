@@ -6,7 +6,7 @@ from mysql.connector import connect
 # testing
 #start_date = '2022-01-01'
 #end_date = datetime.strftime(datetime.today(), '%Y-%m-%d')
-environment = 'dev'
+environment = 'prod'
 
 config_file = './cfg/config_private.json'
 config = utils.get_session_config(config_file)
