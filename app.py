@@ -34,7 +34,7 @@ table_styles = dict(style_header={'backgroundColor': '#171717',
 
 # determine default page for data table based on date
 day = datetime.now().timetuple().tm_yday
-page_current = int(round(day/10, 0))
+page_current = int(day/10)
 
 
 CSS = ['/assets/custom.css']
