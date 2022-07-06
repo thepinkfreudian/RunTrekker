@@ -148,7 +148,7 @@ poi_df.loc[poi_df['label'] == 'END - ', 'label'] = 'END - ' + str(end_point)
 poi_id = len(poi_df)
 midpoint_row = get_midpoint_row(route_df)
 midpoint_row.insert(0, poi_id)
-poi_df.loc[len(poi_df)] = midpoint_row
+#poi_df.loc[len(poi_df)] = midpoint_row
 
 # calculate miles run and generate data frame of only reached coordinates
 total_miles_run = round(sum(run_df['miles']), 2)
@@ -193,7 +193,7 @@ poi_reached = master_df[master_df['date_reached'].notna()][['label', 'date_reach
 poi_reached.columns = ['Route Milestone', 'Date Reached']
 last_poi = poi_reached.iloc[len(poi_reached)-1]['Route Milestone']
 last_poi_index = poi_df.index[poi_df['label'] == last_poi]
-next_poi_row = poi_df.loc[last_poi_index]
+next_poi_row = poi_df.loc[last_poi_index+!]
 next_poi_df = route_df.merge(next_poi_row, how='inner', on=['latitude', 'longitude'])
 
 # define layout css
