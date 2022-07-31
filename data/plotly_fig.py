@@ -6,12 +6,10 @@ parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
 import pandas as pd
-# from mysql.connector import connect
 from datetime import datetime
 import plotly.express as px
 import plotly.graph_objs as go
 import chart_studio.plotly as py
-from data.api_data import api_data
 import utils.database as db
 import utils.utils as utils
 from setup import config, environment, start_date, end_date, cutoff_date, conn
@@ -112,7 +110,7 @@ start_point = config['map']['start_point']
 end_point = config['map']['end_point']
 
 # connection_config = config['mySQL']['connection_config']
-insert_table = config['mySQL']['insert_tables'][environment]
+
 data_tables = config['mySQL']['data_tables']
 
 today = datetime.strftime(datetime.today(), '%Y-%m-%d')
@@ -127,12 +125,6 @@ current_year = utils.get_year(today)
 ##                                password=connection_config['password'])
 
 ##cursor = conn.cursor()
-
-
-# update database with Google fit data
-updates = api_data[api_data['Date'] <= cutoff_date]
-inserts = api_data[api_data['Date'] > cutoff_date]
-db.update_database(conn, updates, inserts, insert_table)
 
 
 # bring mySQL data into DataFrames
@@ -177,14 +169,14 @@ yearly_on_track = total_miles_run >= total_days_passed * goals['daily']
 
 # merge dfs for easier Dash app parsing
 master_df = coordinates_run.merge(poi_df, how='left', on=['latitude', 'longitude'])
-api_data['total_miles'] = api_data['Miles'].cumsum()
+run_df['total_miles'] = run_df['miles'].cumsum()
 
 master_df['date_reached'] = pd.Series('object')
 
 for index, row in master_df.iterrows():
     if pd.notnull(row['label']):
         miles = row['distance_from_start_mi']
-        reached = api_data[api_data['total_miles'] >= miles]
+        reached = run_df[run_df['total_miles'] >= miles]
         master_df['date_reached'][index] = reached.iloc[0, 0]
 
 
@@ -283,12 +275,3 @@ fig = go.Indicator(
     )
 main_bullet.add_trace(fig)
 main_bullet.update_layout(height = 25, margin = {'t': 0, 'b': 0, 'l': 0, 'r': 0}, paper_bgcolor = '#171717')
-
-###########################################################################
-
-### push to plotly or show map locally depending on value of 'push'
-##if push:
-##    py.plot(fig, filename = dashboard_name, auto_open=False)
-##else:
-##    # display final map
-##    fig.show()
