@@ -39,8 +39,8 @@ def get_setup_dates(conn, table):
     row = local_cursor.fetchone()
 
     cutoff_date = row[0]
-    start_date = cutoff_date - timedelta(days=7)
     end_date = datetime.today().date()
+    start_date = end_date - timedelta(days=7)
 
     local_cursor.close()
 
