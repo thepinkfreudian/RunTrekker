@@ -1,0 +1,42 @@
+{
+	"map" : {
+		"mapbox_api_key": "pk.eyJ1IjoidGhlcGlua2ZyZXVkaWFuIiwiYSI6ImNreHh3bnc0MTRzeDkyb3F3NWd2Y2twamYifQ.ibBU10Ip35zvOw6VaTmrBg",
+		"mapbox_style": "mapbox://styles/thepinkfreudian/ckxy1j35q179814ql82sa5sct",
+		"dashboard_name": "wilm_to_buf_mi",
+		"start_point": "Wilmington, NC",
+		"end_point": "Buffalo, NY",
+		"site_css": {
+			"colors": {
+				"darkgrey": "#141414",
+				"lightgrey": "#555555",
+				"pink": "#E12194",
+				"cyan": "#43C3CF",
+				"white": "#FFFFFF"
+			},
+			"fonts": {
+				"headings": "Roboto, Droid Sans",
+				"paragraph": "Lora, Droid Serif"
+			}
+		}
+	},
+	"mySQL": {
+		"connection_config": {
+			"hostname": "sql571.main-hosting.eu",
+			"db": "u203112021_RunTracker",
+			"username": "u203112021_pink",
+			"password": "#rtDBpink7!"
+		},
+		"insert_tables": {
+			"dev":  "run_data_test",
+			"prod": "run_data_new"
+		},
+		"data_tables": {"map_data":  "geocode",
+			"run_data":  "run_data_new",
+			"poi_data":  "points_of_interest"
+		}
+	},
+	"google_fit_api": {
+		"secrets_file": "./cfg/google_api_secrets.json",
+		"token_file": "./cfg/token.json"
+	}
+}
