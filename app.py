@@ -1,4 +1,4 @@
-import os
+import os, dotenv
 from datetime import datetime
 
 from data import route, routemap, goals, sitepage, theme
@@ -8,6 +8,8 @@ import dash
 from dash import dcc
 from dash import html
 from dash import dash_table
+
+dotenv.load_dotenv()
 
 # database
 HOST = os.environ.get("HOST")
@@ -59,7 +61,7 @@ app.title = "RunTrekker"
 server = app.server
 
 
-app.layout = html.Div(style={"backgroundColor": theme.colors["backgrounds"], "z-index": "-1"}, children=[
+app.layout = html.Div(style={"backgroundColor": theme.colors["backgrounds"]}, children=[
 
 ##    # title / tagline
 
@@ -78,7 +80,7 @@ app.layout = html.Div(style={"backgroundColor": theme.colors["backgrounds"], "z-
         html.Div(id="links", children=[
             html.A("source code", href="https://www.github.com/thepinkfreudian/runtrekker", target="_blank", className="inline-link")
             ])
-        ], className="over"),
+        ], className="over", style={"position": "relative", "z-index": "1"}),
     
     # first row
     html.Div(id="row-1", children=[
@@ -92,7 +94,7 @@ app.layout = html.Div(style={"backgroundColor": theme.colors["backgrounds"], "z-
                 config={"responsive": True},
                 )
             ], style = {
-                "width": "100vw", "height": "100vh", "overflow": "hidden", "z-index": "-1", "position": "absolute"})
+                "width": "100vw", "height": "100vh", "overflow": "hidden", "z-index": "0", "position": "absolute"})
         
 
         ], style={"height": "100vh"},
