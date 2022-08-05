@@ -13,14 +13,15 @@ class Database:
         self.database = database
         self.user = user
         self.password = password
+        self.engine = None
         self.conn = None
 
         self.open()
 
     def open(self):
         try:
-            engine = sqlalchemy.create_engine(f"mysql+pymysql://{self.user}:{self.password}@{self.host}/{self.database}")
-            self.conn = engine.connect()
+            self.engine = sqlalchemy.create_engine(f"mysql+pymysql://{self.user}:{self.password}@{self.host}/{self.database}")
+            self.conn = self.engine.connect()
         except Exception as e:
             print(f"Error connecting to database: {e}")
             return
@@ -81,6 +82,7 @@ class Database:
         try:
             data.to_sql(table, con=self.conn, if_exists="append", index=False)
         except sqlalchemy.exc.OperationalError as e:
+            self.conn.open()
             print(f"Error inserting records: {e}")
 
     def update(self, stage_table: str, stored_proc: str, data: pd.DataFrame):
@@ -88,11 +90,13 @@ class Database:
         try:
             data.to_sql(stage_table, con=self.conn, if_exists="replace", index=False)
         except sqlalchemy.exc.OperationalError as e:
+            self.conn.open()
             print(f"Error inserting records: {e}")
-            return
 
         query = f"CALL {stored_proc}"
-        self.conn.execute(query)
+
+        with self.engine.begin() as conn:
+            conn.execute(query, autocommit=True)
 
     def query(self, query):
         """

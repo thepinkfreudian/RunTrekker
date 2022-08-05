@@ -1,9 +1,9 @@
-import os#, dotenv
+import os, dotenv
 from datetime import datetime
 from utilities import utils, database
 from data.api import GoogleFitAPI
 
-#dotenv.load_dotenv()
+dotenv.load_dotenv()
 
 # database
 HOST = os.environ.get("HOST")
