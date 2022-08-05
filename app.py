@@ -1,4 +1,4 @@
-import os, dotenv
+import os
 from datetime import datetime
 
 from data import route, routemap, goals, sitepage, theme
