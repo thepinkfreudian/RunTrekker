@@ -1,10 +1,7 @@
-import os, dotenv
-import pandas as pd
+import os
 from datetime import datetime
 from utilities import utils, database
 from data.api import GoogleFitAPI
-
-dotenv.load_dotenv()
 
 # database
 HOST = os.environ.get("HOST")

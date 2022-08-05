@@ -1,4 +1,4 @@
-import os, dotenv
+import os
 from datetime import datetime
 
 from data import route, routemap, goals, sitepage, theme
@@ -8,8 +8,6 @@ import dash
 from dash import dcc
 from dash import html
 from dash import dash_table
-
-dotenv.load_dotenv()
 
 # database
 HOST = os.environ.get("HOST")
