@@ -69,7 +69,7 @@ class GoogleFitAPI:
 
         # each date can have several entries over the course of the day;
         # sum to get one entry per day (consistent with database)
-        api_data = run_data.groupby(['run_date'], as_index=False)['miles'].sum()
-        api_data['run_date'] = pd.to_datetime(api_data['run_date']).dt.date
+        run_data = run_data.groupby(['run_date'], as_index=False)['miles'].sum()
+        run_data['run_date'] = pd.to_datetime(run_data['run_date']).dt.date
 
         return run_data
