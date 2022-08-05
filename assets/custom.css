@@ -31,13 +31,13 @@ A:hover {
 
 body { 
 	margin: 0;
-	background-color: #171717;
+	/*background-color: #171717;*/
 	font-family: 'Martel Sans';
 	color: #FFFFFF; 
 }
 
 .title {
-	color: #3396EA;
+	/*color: #3396EA;*/
 	font-family: 'Secular One';
 	font-style: bold;
 	font-weight: 400;

@@ -1,7 +1,5 @@
 # private files
-/cfg/config_private.json
-/cfg/google_api_secrets.json
-/cfg/token.json
+testing.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

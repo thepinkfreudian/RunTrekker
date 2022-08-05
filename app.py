@@ -1,156 +1,163 @@
+import os, dotenv
+from datetime import datetime
+
+from data import route, routemap, goals, sitepage, theme
+from utilities import database, themes
+
 import dash
 from dash import dcc
 from dash import html
 from dash import dash_table
 
-import data.plotly_fig as figs
-from data.api_data import api_data
-from setup import config
-from datetime import datetime
+dotenv.load_dotenv()
 
-run_df = figs.run_df[['run_date', 'miles']]
-run_df.columns = ['Date', 'Miles']
-run_df['Miles'] = run_df['Miles'].apply(lambda x: round(x, 2))
-   
-# div/page attributes
-tagline = config['map']['start_point'] + ' to ' + config['map']['end_point']
-annotation = 'Total miles completed: ' + str(figs.total_miles_run) + ' of ' + str(figs.route_distance)
-last_poi_reached = figs.poi_reached.iloc[len(figs.poi_reached)-1]
-next_poi = figs.next_poi_df['label'][0]
-next_poi_miles = round(figs.next_poi_df['distance_from_start_mi'][0], 2) -  figs.total_miles_run
+# database
+HOST = os.environ.get("HOST")
+DATABASE = os.environ.get("DATABASE")
+USER = os.environ.get("USER")
+PASSWORD = os.environ.get("PASSWORD")
 
-# styles
-table_styles = dict(style_header={'backgroundColor': '#171717',
-                                  'font-family': 'Secular One',
-                                  'fontSize': 16,
-                                  'color': '#3396EA'
-                                  },
-                    style_cell={'text-align': 'left',
-                                'backgroundColor': '#171717',
-                                'font-family': 'Martel Sans',
-                                'fontSize': 14,
-                                'color': '#FFFFFF'},
-                    style_data={'width': 'auto'})
+# mapbox
+MAPBOX_API_KEY = os.environ.get("MAPBOX_API_KEY")
+MAPBOX_STYLE_URL = os.environ.get("MAPBOX_STYLE_URL")
+
+db = database.Database(HOST, DATABASE, USER, PASSWORD)
+theme = theme.Theme(themes.default)
+route = route.Route(db)
+goals = goals.Goals(route, db)
+routemap = routemap.RouteMap(route, theme, MAPBOX_API_KEY, MAPBOX_STYLE_URL)
+routemap.get_mapbox(theme.colors["route_trace"], {"size": 16, "family": theme.fonts["paragraphs"], "color": theme.colors["run_trace_links_labels"]}, 5.25)
+routemap.add_run_trace(theme.colors["run_trace_links_labels"])
+routemap.add_milestones_trace(theme.colors["text"], 12, theme.colors["milestones"], theme.sizes["milestones"])
+mapbox = routemap.mapbox
+
+page = sitepage.SitePage(route, routemap, goals, theme)
+main_bullet = page.make_main_bullet()
+sub_bullets = page.make_sub_bullets()
+route_tagline = page.get_route_tagline()
+total_miles_annotation = page.get_total_miles_annotation()
+milestones_reached = page.get_milestones_reached()
+last_milestone = f"Last milestone reached: {page.last_milestone_reached.loc['milestone_label']} ({page.last_milestone_reached.loc['date_reached']})"
+miles_to_next = round(page.next_milestone.loc["miles_from_origin"] - goals.total_miles_run, 2)
+next_milestone = f"Next milestone: {page.next_milestone.loc['milestone_label']} in {miles_to_next} miles"
+
+weekly_annotation = f"Weekly: {goals.weekly_miles_completed} of {round(goals.data['weekly_miles_goal'].iloc[0], 2)}"
+monthly_annotation = f"Monthly: {goals.monthly_miles_completed} of {round(goals.data['monthly_miles_goal'].iloc[0], 2)}"
 
 # determine default page for data table based on date
 day = datetime.now().timetuple().tm_yday
 page_current = int(day/10)
 
-
-CSS = ['/assets/custom.css']
+CSS = ["/assets/custom.css"]
 app = dash.Dash(__name__,
                 external_stylesheets=CSS,
                 meta_tags=[
-        {'name': 'viewport', 'content': 'width=device-width, initial-scale=1'},
-        {'name': 'og:title', 'content': 'RunTrekker'},
-        {'name': 'og:description', 'content': 'A route tracking app for runners.'},
-        {'name': 'og:image', 'content': 'https://thepinkfreudian.com/site_thumbnail.png'}
+        {"name": "viewport", "content": "width=device-width, initial-scale=1"},
+        {"name": "og:title", "content": "RunTrekker"},
+        {"name": "og:description", "content": "A route tracking app for runners."},
+        {"name": "og:image", "content": "https://thepinkfreudian.com/site_thumbnail.png"}
     ])
-app.title = 'RunTrekker'
+app.title = "RunTrekker"
 server = app.server
 
 
-app.layout = html.Div(children=[
+app.layout = html.Div(style={"backgroundColor": theme.colors["backgrounds"], "z-index": "-1"}, children=[
 
 ##    # title / tagline
-    #html.H1(children='RunTrekker', style={'z-index': '0'}, className='title'),
 
     html.Div(children=[
-        html.H1(children='RunTrekker', className='title'),
-        html.H3(children=tagline),
-        html.Span('A Python Dash app to track running mileage progress', style={'font-size': '.8em'}),
+        html.H1(children="RunTrekker", className="title", style={"color": theme.colors["headers"]}),
+        html.H3(children=route_tagline),
+        html.Span("A Python Dash app to track running mileage progress", style={"font-size": ".8em"}),
         html.Br(),
-        html.Span('on a chosen route between cities.', style={'font-size': '.8em', 'padding-top': '2%'}),
-        dcc.Graph(id='main-bullet',
-            figure=figs.main_bullet,
-                  config={'displayModeBar': False}),
-        html.Div(children=annotation),
-        html.Div(children='Latest Milestone: ' + str(last_poi_reached['Route Milestone']) + ' (' + str(last_poi_reached['Date Reached']) + ')'),
-        html.Div(children='Next Milestone: ' + str(next_poi) + ' in ' + str(next_poi_miles) + ' miles'),
-        html.Div(id='links', children=[
-           # html.A('about', href='http://www.thepinkfreudian.com/about.html', target="_blank", className='inline-link'),
-           # html.Span('  -  ', style={'display': 'inline-block'}),
-            html.A('source code', href='https://www.github.com/thepinkfreudian/runtrekker', target="_blank", className='inline-link')
+        html.Span("on a chosen route between cities.", style={"font-size": ".8em", "padding-top": "2%"}),
+        dcc.Graph(id="main-bullet",
+            figure=main_bullet,
+                  config={"displayModeBar": False}),
+        html.Div(children=total_miles_annotation),
+        html.Div(children=last_milestone),
+        html.Div(children=next_milestone),
+        html.Div(id="links", children=[
+            html.A("source code", href="https://www.github.com/thepinkfreudian/runtrekker", target="_blank", className="inline-link")
             ])
-        ], className='over'),
+        ], className="over"),
     
     # first row
-    html.Div(id='row-1', children=[
+    html.Div(id="row-1", children=[
 
         
-        html.Div(id='left-col-row-1', children=[
+        html.Div(id="left-col-row-1", children=[
             dcc.Graph(
-                id='map-fig',
-                style={'height': '100%'},
-                figure=figs.map_fig,
-                config={'responsive': True},
+                id="map-fig",
+                style={"height": "100%"},
+                figure=mapbox,
+                config={"responsive": True},
                 )
-            ], style = {#'display': 'inline-block',
-                'width': '100vw', 'height': '100vh', 'overflow': 'hidden', 'z-index': '-1', 'position': 'absolute'})
-
+            ], style = {
+                "width": "100vw", "height": "100vh", "overflow": "hidden", "z-index": "-1", "position": "absolute"})
         
 
-        ], style={'height': '100vh'},
-             className='row'),
+        ], style={"height": "100vh"},
+             className="row"),
 
     # row 2
-    html.Div(id='row-2', children=[
+    html.Div(id="row-2", children=[
 
-        html.Div(id='left-col-row2', children=[
+        html.Div(id="left-col-row2", children=[
 
             html.Div(children=[
-                html.H3(children='Progress Towards Mileage Goals'),
-                html.Div(id='bullet-wrapper', children=[
-                    dcc.Graph(id='progress-rate',
-                              figure=figs.bullets)
+                html.H3(children="Progress Towards Mileage Goals"),
+                html.Div(id="bullet-wrapper", children=[
+                    dcc.Graph(id="progress-rate",
+                              figure=sub_bullets)
                     ])
-                ], className='col-element'),
+                ], className="col-element"),
 
             html.Div(children=[
-                html.Div(children='Weekly: ' + str(figs.actual_weekly) + ' of ' + str(figs.goals['weekly'])),
-                html.Div(children='Monthly: ' + str(figs.actual_monthly) + ' of ' + str(figs.expected_monthly))
-                ], className='col-element'),
+                html.Div(children=weekly_annotation),
+                html.Div(children=monthly_annotation)
+                ], className="col-element"),
 
             html.Div(children=[
                 html.H3("Route Milestones Reached"),
 
                 dash_table.DataTable(
-                    columns=[{'name': i, 'id': i} for i in figs.poi_reached.columns],
-                    data=figs.poi_reached.to_dict('records'),
+                    columns=[{"name": i, "id": i} for i in page.milestones_reached],
+                    data=page.milestones_reached.to_dict("records"),
                     style_as_list_view=True,
-                    style_header=table_styles['style_header'],
-                    style_cell=table_styles['style_cell'],
-                    style_data=table_styles['style_data']
+                    style_header=page.table_styles["style_header"],
+                    style_cell=page.table_styles["style_cell"],
+                    style_data=page.table_styles["style_data"]
                     )
-                ], className='col-element')
+                ], className="col-element")
             
-            ], className='dash-container two-col'),
+            ], className="dash-container two-col"),
 
-        html.Div(id='right-col-r2', children=[
-            html.H3(children='Run Data'),
+        html.Div(id="right-col-r2", children=[
+            html.H3(children="Run Data"),
 
-            dash_table.DataTable(id='run-data-table',
-                columns=[{'name': i, 'id': i} for i in run_df.columns],
-                data=run_df.to_dict('records'),
-                page_action='native',
+            dash_table.DataTable(id="run-data-table",
+                columns=[{"name": i, "id": i} for i in page.run_data.columns],
+                data=page.run_data.to_dict("records"),
+                page_action="native",
                 page_current=page_current,
                 page_size= 10,
                 style_as_list_view=True,
-                style_header=table_styles['style_header'],
-                style_cell=table_styles['style_cell'],
-                style_data=table_styles['style_data']
+                style_header=page.table_styles["style_header"],
+                style_cell=page.table_styles["style_cell"],
+                style_data=page.table_styles["style_data"]
                 )
-            ], className='dash-container two-col')
+            ], className="dash-container two-col")
             
-        ], style={'width': '100%'}, className='row'),
+        ], style={"width": "100%"}, className="row"),
 
-    html.Div(id='footer', children=[
-        html.Div('created by ', className='footer-text'),
-        html.A(id='email-link', children=['thepinkfreudian'], href='mailto:pink@thepinkfreudian.com', target='_blank', className='footer-text'),
-        html.Div(', 2022.', className='footer-text')
-        ], className='row footer')
+    html.Div(id="footer", children=[
+        html.Div("created by ", className="footer-text"),
+        html.A(id="email-link", children=["thepinkfreudian"], href="mailto:pink@thepinkfreudian.com", target="_blank", className="footer-text"),
+        html.Div(", 2022.", className="footer-text")
+        ], className="row footer")
     
-], className='container')
+], className="container")
 
-if __name__ == '__main__':
-    app.run_server(debug=True)
+if __name__ == "__main__":
+    app.run_server()
