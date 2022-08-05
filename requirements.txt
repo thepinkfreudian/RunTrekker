@@ -4,4 +4,3 @@ dash
 gunicorn
 sqlalchemy
 pymysql
-dotenv
