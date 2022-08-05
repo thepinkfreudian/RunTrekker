@@ -1,4 +1,4 @@
-import os#, dotenv
+import os, dotenv
 from datetime import datetime
 
 from data import route, routemap, goals, sitepage, theme
@@ -9,15 +9,15 @@ from dash import dcc
 from dash import html
 from dash import dash_table
 
-#dotenv.load_dotenv()
+if os.environ.get("ENVIRONMENT") is None:
+    import dotenv
+    dotenv.load_dotenv()
 
-# database
 HOST = os.environ.get("HOST")
 DATABASE = os.environ.get("DATABASE")
 USER = os.environ.get("USER")
 PASSWORD = os.environ.get("PASSWORD")
 
-# mapbox
 MAPBOX_API_KEY = os.environ.get("MAPBOX_API_KEY")
 MAPBOX_STYLE_URL = os.environ.get("MAPBOX_STYLE_URL")
 
@@ -61,26 +61,26 @@ app.title = "RunTrekker"
 server = app.server
 
 
-app.layout = html.Div(style={"backgroundColor": theme.colors["backgrounds"]}, children=[
+app.layout = html.Div(style={"backgroundColor": theme.colors["backgrounds"], "color": theme.colors["text"]}, children=[
 
-##    # title / tagline
-
+    # title / tagline
     html.Div(children=[
         html.H1(children="RunTrekker", className="title", style={"color": theme.colors["headers"]}),
         html.H3(children=route_tagline),
-        html.Span("A Python Dash app to track running mileage progress", style={"font-size": ".8em"}),
+        html.Span("A Python Dash app to track running mileage progress"),
         html.Br(),
-        html.Span("on a chosen route between cities.", style={"font-size": ".8em", "padding-top": "2%"}),
+        html.Span("on a chosen route between cities."),
         dcc.Graph(id="main-bullet",
-            figure=main_bullet,
+                  figure=main_bullet,
                   config={"displayModeBar": False}),
         html.Div(children=total_miles_annotation),
         html.Div(children=last_milestone),
         html.Div(children=next_milestone),
         html.Div(id="links", children=[
-            html.A("source code", href="https://www.github.com/thepinkfreudian/runtrekker", target="_blank", className="inline-link")
+            html.A("source code", href="https://www.github.com/thepinkfreudian/runtrekker", target="_blank",
+                   className="inline-link", style={"color": theme.colors["run_trace_links_labels"]})
             ])
-        ], className="over", style={"position": "relative", "z-index": "1"}),
+        ], className="over"),
     
     # first row
     html.Div(id="row-1", children=[
@@ -93,12 +93,8 @@ app.layout = html.Div(style={"backgroundColor": theme.colors["backgrounds"]}, ch
                 figure=mapbox,
                 config={"responsive": True},
                 )
-            ], style = {
-                "width": "100vw", "height": "100vh", "overflow": "hidden", "z-index": "0", "position": "absolute"})
-        
-
-        ], style={"height": "100vh"},
-             className="row"),
+            ])
+        ], className="row"),
 
     # row 2
     html.Div(id="row-2", children=[
@@ -149,11 +145,12 @@ app.layout = html.Div(style={"backgroundColor": theme.colors["backgrounds"]}, ch
                 )
             ], className="dash-container two-col")
             
-        ], style={"width": "100%"}, className="row"),
+        ], className="row"),
 
     html.Div(id="footer", children=[
         html.Div("created by ", className="footer-text"),
-        html.A(id="email-link", children=["thepinkfreudian"], href="mailto:pink@thepinkfreudian.com", target="_blank", className="footer-text"),
+        html.A(id="email-link", children=["thepinkfreudian"], href="mailto:pink@thepinkfreudian.com", target="_blank",
+               className="footer-text"),
         html.Div(", 2022.", className="footer-text")
         ], className="row footer")
     

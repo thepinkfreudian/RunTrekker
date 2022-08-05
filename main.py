@@ -1,17 +1,18 @@
-import os, dotenv
+import os
 from datetime import datetime
 from utilities import utils, database
 from data.api import GoogleFitAPI
 
-dotenv.load_dotenv()
 
-# database
+if os.environ.get("ENVIRONMENT") is None:
+    import dotenv
+    dotenv.load_dotenv()
+
 HOST = os.environ.get("HOST")
 DATABASE = os.environ.get("DATABASE")
 USER = os.environ.get("USER")
 PASSWORD = os.environ.get("PASSWORD")
 
-# api oauth
 CLIENT_ID = os.environ.get("CLIENT_ID")
 CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
 TOKEN_URI = os.environ.get("TOKEN_URI")
