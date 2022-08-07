@@ -96,7 +96,7 @@ A:hover {
     .container {
 		width: 85%;
 		height: 100vh;
-        margin: 0;
+        margin: 0 auto;
 		position: relative;
 		overflow-x: hidden;
     }
@@ -145,7 +145,7 @@ A:hover {
 		height: 100%;
 		overflow-x: hidden;
 		position: relative;
-		margin: 0;
+		margin: 0 auto;
 	}
 
 	.title {
