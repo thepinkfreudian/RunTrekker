@@ -36,7 +36,7 @@ class Goals:
 
     def get_miles_completed(self):
         miles = self.db.get_max_value("route_data", "miles_from_origin", where={"route_id": self.route.id,
-                                                                               "reached": 1})
+                                                                                "reached": 1})
         return float(round(miles, 2))
 
     def get_run_data(self):
@@ -54,7 +54,9 @@ class Goals:
             query += f"'{self.get_first_of_month()}' AND '{datetime.today().date()}'"
 
         rows = self.db.query(query)
-        return float(round(rows.first()[0], 2))
+        if rows.iloc[0, 0] is None:
+            return 0.00
+        return float(round(rows.iloc[0, 0], 2))
 
     def get_milestones_reached(self):
 
@@ -69,7 +71,7 @@ class Goals:
 
     def is_on_track(self, timeframe: str):
         if timeframe.lower() == "weekly":
-            weekday = datetime.today().weekday()
+            weekday = datetime.today().weekday() + 1  # avoid division by zero
             return self.weekly_miles_completed / weekday >= self.data["daily_miles_goal"].iloc[0] * weekday
         if timeframe.lower() == "monthly":
             day = datetime.today().day

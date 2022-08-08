@@ -14,20 +14,20 @@ class Database:
         self.user = user
         self.password = password
         self.engine = None
-        self.conn = None
+        # self.conn = None
 
         self.open()
 
     def open(self):
         try:
             self.engine = sqlalchemy.create_engine(f"mysql+pymysql://{self.user}:{self.password}@{self.host}/{self.database}")
-            self.conn = self.engine.connect()
+            # self.conn = self.engine.connect()
         except Exception as e:
             print(f"Error connecting to database: {e}")
             return
 
-    def close(self):
-        self.conn.close()
+    # def close(self):
+        # self.conn.close()
 
     @staticmethod
     def get_where_clause(where: dict = None):
@@ -67,7 +67,8 @@ class Database:
         query = f"SELECT {columns} FROM {table} {where_clause} {group_by_clause} {order_by_clause}"
 
         try:
-            df = pd.read_sql(query, con=self.conn)
+            with self.engine.begin() as conn:
+                df = pd.read_sql(query, con=conn)
         except sqlalchemy.exc.OperationalError as e:
             print(f"Error retrieving data: {e}")
 
@@ -80,17 +81,19 @@ class Database:
     def insert(self, table: str, data: pd.DataFrame):
 
         try:
-            data.to_sql(table, con=self.conn, if_exists="append", index=False)
+            with self.engine.connect() as conn:
+                data.to_sql(table, con=conn, if_exists="append", index=False)
         except sqlalchemy.exc.OperationalError as e:
-            self.conn.open()
+            # self.open()
             print(f"Error inserting records: {e}")
 
     def update(self, stage_table: str, stored_proc: str, data: pd.DataFrame):
 
         try:
-            data.to_sql(stage_table, con=self.conn, if_exists="replace", index=False)
+            with self.engine.begin() as conn:
+                data.to_sql(stage_table, con=conn, if_exists="replace", index=False)
         except sqlalchemy.exc.OperationalError as e:
-            self.conn.open()
+            # self.open()
             print(f"Error inserting records: {e}")
 
         query = f"CALL {stored_proc}"
@@ -102,13 +105,10 @@ class Database:
         """
         catch-all for queries without a specific method.
         """
-        try:
-            rows = self.conn.execute(query)
-        except sqlalchemy.exc.OperationalError:
-            self.open()
+        with self.engine.begin() as conn:
+            rows = pd.read_sql(query, con=conn)
 
-        if rows:
-            return rows
+        return rows
 
     # custom method specific to RT
     def update_run_table(self, table: str, stage_table: str,
