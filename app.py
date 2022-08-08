@@ -25,6 +25,7 @@ db = database.Database(HOST, DATABASE, USER, PASSWORD)
 theme = theme.Theme(themes.default)
 route = route.Route(db)
 goals = goals.Goals(route, db)
+print(goals.weekly_on_track, goals.monthly_on_track)
 routemap = routemap.RouteMap(route, theme, MAPBOX_API_KEY, MAPBOX_STYLE_URL)
 routemap.get_mapbox(theme.colors["route_trace"], {"size": 16, "family": theme.fonts["paragraphs"], "color": theme.colors["run_trace_links_labels"]}, 5.25)
 routemap.add_run_trace(theme.colors["run_trace_links_labels"])
@@ -91,7 +92,7 @@ app.layout = html.Div(style={"backgroundColor": theme.colors["backgrounds"], "co
                 id="map-fig",
                 style={"height": "100%"},
                 figure=mapbox,
-                config={"responsive": True},
+                config={"responsive": True, "scrollZoom": False},
                 )
             ])
         ], className="row"),
