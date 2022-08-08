@@ -91,7 +91,7 @@ app.layout = html.Div(style={"backgroundColor": theme.colors["backgrounds"], "co
                 id="map-fig",
                 style={"height": "100%"},
                 figure=mapbox,
-                config={"responsive": True},
+                config={"responsive": True, "scrollZoom": False, "staticPlot": True},
                 )
             ])
         ], className="row"),
