@@ -19,9 +19,9 @@ PASSWORD = os.environ.get("PASSWORD")
 
 # text notifications
 EMAIL = os.environ.get("EMAIL")
-EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
+APP_PASSWORD = os.environ.get("APP_PASSWORD")
 PHONE_NUMBER = os.environ.get("PHONE_NUMBER")
-CARRIER = os.environ.get("CARRIER")
+PHONE_CARRIER = os.environ.get("PHONE_CARRIER")
 
 # GoogleFit API
 CLIENT_ID = os.environ.get("CLIENT_ID")
@@ -63,12 +63,12 @@ try:
                         cutoff_date=cutoff)
     last_update = db.get(table="run_data",
                          columns=["*"],
-                         where={"CONVERT(updated_date, date)": f"'{datetime.today().date()}'"},
-                         order_by = ["run_date DESC LIMIT 1"])
+                         where={"CONVERT(updated_date, date)": f"'{db.get_max_value('run_data', 'CONVERT(updated_date, date)')}'"},
+                         order_by=["run_date DESC LIMIT 1"])
     message += f"\n\n Date: {last_update.iloc[0, 1]}, Miles: {last_update.iloc[0, 2]}"
 except sqlalchemy.exc.DatabaseError as e:
     message += f"\n\n Error updating database: {e}"
 
 
-text_auth = text.authorize_email(EMAIL, EMAIL_PASSWORD)
-text.send_message(text_auth, PHONE_NUMBER, CARRIER, message)
+text_auth = text.authorize_email(email=EMAIL, app_password=APP_PASSWORD)
+text.send_message(auth=text_auth, phone_number=PHONE_NUMBER, carrier=PHONE_CARRIER, message=message)
