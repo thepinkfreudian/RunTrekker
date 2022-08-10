@@ -1,5 +1,9 @@
+""" Send a text message via GMail SMTP server.
+    Password is a Google App password, not personal Google account password.
+    See https://support.google.com/accounts/answer/185833 for instructions."""
+
 import smtplib
-import sys
+
  
 CARRIERS = {
     "att": "@mms.att.net",
@@ -9,8 +13,8 @@ CARRIERS = {
 }
 
 
-def authorize_email(email, password):
-    return email, password
+def authorize_email(email, app_password):
+    return email, app_password
 
 
 def send_message(auth, phone_number, carrier, message):

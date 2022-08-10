@@ -4,8 +4,8 @@ from utilities.database import Database
 
 class Route:
 
-    def __init__(self, db: Database):
-        self.db = db
+    def __init__(self, database: Database):
+        self.db = database
         self.id = self.get_id()
         self.data = self.get_data("route_data", order_by=["miles_from_origin ASC"])
         self.miles = float(round(self.data.loc[len(self.data)-1, "miles_from_origin"], 1))

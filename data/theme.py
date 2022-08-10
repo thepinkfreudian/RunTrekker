@@ -1,5 +1,3 @@
-
-
 class Theme:
 
     def __init__(self, theme_data: dict):
