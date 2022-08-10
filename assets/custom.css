@@ -25,12 +25,12 @@ span {
     padding-top: 1.5%;
 }
 
-A:link; A:visited {
+a:link; a:visited {
 	text-decoration: none;
 	font-weight: 700;
 }
 
-A:hover {
+a:hover {
 	text-decoration: underline;
 }
 

@@ -150,7 +150,7 @@ app.layout = html.Div(style={"backgroundColor": theme.colors["backgrounds"], "co
     html.Div(id="footer", children=[
         html.Div("created by ", className="footer-text"),
         html.A(id="email-link", children=["thepinkfreudian"], href="mailto:pink@thepinkfreudian.com", target="_blank",
-               className="footer-text"),
+               className="footer-text", style={"color": theme.colors["run_trace_links_labels"]}),
         html.Div(", 2022.", className="footer-text")
         ], className="row footer")
     
