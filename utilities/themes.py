@@ -7,14 +7,15 @@ default = {
 
     "colors": {
         "backgrounds": "#171717",
-        "headers": "#3396EA",
+        #"headers": "#3396EA",
+        "headers": "#43C3CF",
         "route_trace": "#555555",
         "run_trace_links_labels": "#E12194",
         "text": "#FFFFFF",
         "bullet_labels": "#ACB7B5",
         "bullet_backgrounds": "#3C3541",
         "off_track": "#BD0927",
-        "milestones": {"state border": "#3396EA", "city": "#43C3CF", "route milestone": "#FFFFFF"}
+        "milestones": {"state border": "#43C3CF", "city": "#43C3CF", "route milestone": "#FFFFFF"}
             },
 
     "sizes": {
